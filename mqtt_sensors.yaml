@@ -1,0 +1,115 @@
+# ============================================================
+# MQTT Sensors — add this block to configuration.yaml
+# under an existing  mqtt:  key, or as a new top-level key.
+# Broker: 192.168.1.40:1883  user: pi  pass: raspberry
+# Topics published by rpi4b signalk-mqtt-gw  →  vessels/self/...
+# ============================================================
+
+mqtt:
+  sensor:
+
+    # ── PORT ENGINE ─────────────────────────────────────────
+    - name: "SK Port RPM Raw"
+      unique_id: sk_port_rpm_raw
+      state_topic: "vessels/self/propulsion/port/revolutions"
+      unit_of_measurement: "Hz"
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(4) }}"
+
+    - name: "SK Port Oil Pressure"
+      unique_id: sk_port_oil_pressure
+      state_topic: "vessels/self/sensors/port/oilpressure/bar"
+      unit_of_measurement: "bar"
+      device_class: pressure
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(2) }}"
+
+    - name: "SK Port Water Temp"
+      unique_id: sk_port_water_temp
+      state_topic: "vessels/self/sensors/port/watertemp/celsius"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(1) }}"
+
+    - name: "SK Port Fuel Rate Raw"
+      unique_id: sk_port_fuel_rate_raw
+      state_topic: "vessels/self/propulsion/port/fuel/rate"
+      unit_of_measurement: "m³/s"
+      state_class: measurement
+      value_template: "{{ value | float(0) }}"
+
+    # ── STARBOARD ENGINE ────────────────────────────────────
+    - name: "SK Starboard RPM Raw"
+      unique_id: sk_starboard_rpm_raw
+      state_topic: "vessels/self/propulsion/starboard/revolutions"
+      unit_of_measurement: "Hz"
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(4) }}"
+
+    - name: "SK Starboard Oil Pressure"
+      unique_id: sk_starboard_oil_pressure
+      state_topic: "vessels/self/sensors/starboard/oilpressure/bar"
+      unit_of_measurement: "bar"
+      device_class: pressure
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(2) }}"
+
+    - name: "SK Starboard Water Temp"
+      unique_id: sk_starboard_water_temp
+      state_topic: "vessels/self/sensors/starboard/watertemp/celsius"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(1) }}"
+
+    - name: "SK Starboard Fuel Rate Raw"
+      unique_id: sk_starboard_fuel_rate_raw
+      state_topic: "vessels/self/propulsion/starboard/fuel/rate"
+      unit_of_measurement: "m³/s"
+      state_class: measurement
+      value_template: "{{ value | float(0) }}"
+
+    # ── NAVIGATION ──────────────────────────────────────────
+    - name: "SK Depth"
+      unique_id: sk_depth
+      state_topic: "vessels/self/environment/depth/belowTransducer"
+      unit_of_measurement: "m"
+      device_class: distance
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(1) }}"
+
+    - name: "SK Wind Speed"
+      unique_id: sk_wind_speed
+      state_topic: "vessels/self/environment/wind/speedApparentKnots"
+      unit_of_measurement: "kn"
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(1) }}"
+
+    - name: "SK Wind Angle"
+      unique_id: sk_wind_angle
+      state_topic: "vessels/self/environment/wind/angleApparentDegrees"
+      unit_of_measurement: "°"
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(0) | int }}"
+
+    - name: "SK Heading Raw"
+      unique_id: sk_heading_raw
+      state_topic: "vessels/self/navigation/headingMagnetic"
+      unit_of_measurement: "rad"
+      state_class: measurement
+      value_template: "{{ value | float(0) }}"
+
+    - name: "SK SOG Raw"
+      unique_id: sk_sog_raw
+      state_topic: "vessels/self/navigation/speedOverGround"
+      unit_of_measurement: "m/s"
+      state_class: measurement
+      value_template: "{{ value | float(0) }}"
+
+    - name: "SK Fuel Per NM"
+      unique_id: sk_fuel_per_nm
+      state_topic: "vessels/self/sensors/engines/total/fuel/litersPerNm"
+      unit_of_measurement: "L/NM"
+      state_class: measurement
+      value_template: "{{ value | float(0) | round(2) }}"

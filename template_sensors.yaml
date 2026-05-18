@@ -1,0 +1,62 @@
+# ============================================================
+# Template Sensors — add this block to configuration.yaml
+# Converts raw MQTT values to display units matching DashboardSK
+#   RPM:  Hz  × 60          → RPM
+#   Fuel: m³/s × 3,600,000  → L/h
+#   SOG:  m/s × 1.94384     → knots
+#   HDG:  rad × 57.2958     → degrees
+# ============================================================
+
+template:
+  - sensor:
+
+      # ── PORT ENGINE ───────────────────────────────────────
+      - name: "Helm Port RPM"
+        unique_id: helm_port_rpm
+        unit_of_measurement: "RPM"
+        state_class: measurement
+        icon: mdi:engine
+        state: >
+          {{ (states('sensor.sk_port_rpm_raw') | float(0) * 60) | round(0) | int }}
+
+      - name: "Helm Port Fuel LPH"
+        unique_id: helm_port_fuel_lph
+        unit_of_measurement: "L/h"
+        state_class: measurement
+        icon: mdi:fuel
+        state: >
+          {{ (states('sensor.sk_port_fuel_rate_raw') | float(0) * 3600000) | round(1) }}
+
+      # ── STARBOARD ENGINE ──────────────────────────────────
+      - name: "Helm Starboard RPM"
+        unique_id: helm_starboard_rpm
+        unit_of_measurement: "RPM"
+        state_class: measurement
+        icon: mdi:engine
+        state: >
+          {{ (states('sensor.sk_starboard_rpm_raw') | float(0) * 60) | round(0) | int }}
+
+      - name: "Helm Starboard Fuel LPH"
+        unique_id: helm_starboard_fuel_lph
+        unit_of_measurement: "L/h"
+        state_class: measurement
+        icon: mdi:fuel
+        state: >
+          {{ (states('sensor.sk_starboard_fuel_rate_raw') | float(0) * 3600000) | round(1) }}
+
+      # ── NAVIGATION ────────────────────────────────────────
+      - name: "Helm SOG"
+        unique_id: helm_sog
+        unit_of_measurement: "kn"
+        state_class: measurement
+        icon: mdi:speedometer
+        state: >
+          {{ (states('sensor.sk_sog_raw') | float(0) * 1.94384) | round(1) }}
+
+      - name: "Helm Heading"
+        unique_id: helm_heading
+        unit_of_measurement: "°"
+        state_class: measurement
+        icon: mdi:compass
+        state: >
+          {{ (states('sensor.sk_heading_raw') | float(0) * 57.2958) | round(0) | int }}
