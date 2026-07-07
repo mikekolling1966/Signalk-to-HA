@@ -4,502 +4,215 @@ views:
   path: engines
   icon: mdi:engine
   type: panel
+  kiosk_mode:
+    hide_header: true
+    hide_sidebar: true
+  card_mod:
+    style:
+      hui-view$: ':host { --ha-view-padding: 0px !important; background: #f0f0f0 !important;
+        } #columns { padding: 0 !important; margin: 0 !important; background: #f0f0f0
+        !important; }'
+      hui-panel-view$: ':host { padding: 0 !important; background: #f0f0f0 !important;
+        } .container { padding: 0 !important; background: #f0f0f0 !important; }'
+      .: |
+        app-header, app-toolbar {
+          display: none !important;
+        }
+        :host {
+          --header-height: 0px !important;
+        }
   cards:
   - type: vertical-stack
     cards:
     - type: horizontal-stack
       cards:
-      - type: vertical-stack
-        cards:
-        - type: markdown
-          content: <div style="font-weight:bold;color:#90caf9;padding:4px 0 0 8px;">&#9655;
-            PORT ENGINE</div>
-        - type: custom:canvas-gauge-card
-          entity: sensor.helm_port_rpm
-          card_height: 600
-          gauge:
-            type: radial-gauge
-            width: 580
-            height: 580
-            title: RPM
-            units: RPM
-            minValue: 0
-            maxValue: 4400
-            majorTicks:
-            - '0'
-            - '500'
-            - '1000'
-            - '1500'
-            - '2000'
-            - '2500'
-            - '3000'
-            - '3500'
-            - '4000'
-            - '4400'
-            highlights:
-            - from: 0
-              to: 2800
-              color: rgba(83,189,117,0.35)
-            - from: 2800
-              to: 3600
-              color: rgba(255,192,87,0.45)
-            - from: 3600
-              to: 4400
-              color: rgba(234,89,89,0.55)
-            colorPlate: '#1a1a2e'
-            colorMajorTicks: '#ccc'
-            colorMinorTicks: '#666'
-            colorTitle: '#90caf9'
-            colorUnits: '#90caf9'
-            colorNumbers: '#ddd'
-            colorNeedle: '#ff6b35'
-            colorNeedleEnd: '#ff6b35'
-            colorValueBoxBackground: '#0d0d1a'
-            colorValueText: '#fff'
-            borderShadowWidth: 0
-            borders: false
-            needleType: arrow
-            needleWidth: 3
-            animationDuration: 500
-            animationRule: linear
-        - type: horizontal-stack
-          cards:
-          - type: custom:canvas-gauge-card
-            entity: sensor.sk_port_water_temp
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Water C
-              units: C
-              minValue: 0
-              maxValue: 120
-              majorTicks:
-              - '0'
-              - '40'
-              - '70'
-              - '90'
-              - '110'
-              - '120'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#90caf9'
-              colorUnits: '#90caf9'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 40
-                to: 70
-                color: rgba(255,192,87,0.4)
-              - from: 70
-                to: 90
-                color: rgba(83,189,117,0.35)
-              - from: 90
-                to: 100
-                color: rgba(255,192,87,0.45)
-              - from: 100
-                to: 120
-                color: rgba(234,89,89,0.55)
-          - type: custom:canvas-gauge-card
-            entity: sensor.sk_port_oil_pressure
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Oil
-              units: bar
-              minValue: 0
-              maxValue: 8
-              majorTicks:
-              - '0'
-              - '2'
-              - '3'
-              - '5'
-              - '8'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#90caf9'
-              colorUnits: '#90caf9'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 0
-                to: 2
-                color: rgba(234,89,89,0.55)
-              - from: 2
-                to: 3
-                color: rgba(255,192,87,0.45)
-              - from: 3
-                to: 8
-                color: rgba(83,189,117,0.35)
-          - type: custom:canvas-gauge-card
-            entity: sensor.helm_port_fuel_lph
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Fuel
-              units: L/h
-              minValue: 0
-              maxValue: 24
-              majorTicks:
-              - '0'
-              - '6'
-              - '12'
-              - '18'
-              - '24'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#90caf9'
-              colorUnits: '#90caf9'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 0
-                to: 14
-                color: rgba(83,189,117,0.35)
-              - from: 14
-                to: 18
-                color: rgba(255,192,87,0.45)
-              - from: 18
-                to: 24
-                color: rgba(234,89,89,0.55)
-      - type: vertical-stack
-        cards:
-        - type: markdown
-          content: <div style="font-weight:bold;color:#80cbc4;padding:4px 0 0 8px;">&#9655;
-            STARBOARD ENGINE</div>
-        - type: custom:canvas-gauge-card
-          entity: sensor.helm_starboard_rpm
-          card_height: 600
-          gauge:
-            type: radial-gauge
-            width: 580
-            height: 580
-            title: RPM
-            units: RPM
-            minValue: 0
-            maxValue: 4400
-            majorTicks:
-            - '0'
-            - '500'
-            - '1000'
-            - '1500'
-            - '2000'
-            - '2500'
-            - '3000'
-            - '3500'
-            - '4000'
-            - '4400'
-            highlights:
-            - from: 0
-              to: 2800
-              color: rgba(83,189,117,0.35)
-            - from: 2800
-              to: 3600
-              color: rgba(255,192,87,0.45)
-            - from: 3600
-              to: 4400
-              color: rgba(234,89,89,0.55)
-            colorPlate: '#1a1a2e'
-            colorMajorTicks: '#ccc'
-            colorMinorTicks: '#666'
-            colorTitle: '#80cbc4'
-            colorUnits: '#80cbc4'
-            colorNumbers: '#ddd'
-            colorNeedle: '#ff6b35'
-            colorNeedleEnd: '#ff6b35'
-            colorValueBoxBackground: '#0d0d1a'
-            colorValueText: '#fff'
-            borderShadowWidth: 0
-            borders: false
-            needleType: arrow
-            needleWidth: 3
-            animationDuration: 500
-            animationRule: linear
-        - type: horizontal-stack
-          cards:
-          - type: custom:canvas-gauge-card
-            entity: sensor.sk_starboard_water_temp
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Water C
-              units: C
-              minValue: 0
-              maxValue: 120
-              majorTicks:
-              - '0'
-              - '40'
-              - '70'
-              - '90'
-              - '110'
-              - '120'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#80cbc4'
-              colorUnits: '#80cbc4'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 40
-                to: 70
-                color: rgba(255,192,87,0.4)
-              - from: 70
-                to: 90
-                color: rgba(83,189,117,0.35)
-              - from: 90
-                to: 100
-                color: rgba(255,192,87,0.45)
-              - from: 100
-                to: 120
-                color: rgba(234,89,89,0.55)
-          - type: custom:canvas-gauge-card
-            entity: sensor.sk_starboard_oil_pressure
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Oil
-              units: bar
-              minValue: 0
-              maxValue: 8
-              majorTicks:
-              - '0'
-              - '2'
-              - '3'
-              - '5'
-              - '8'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#80cbc4'
-              colorUnits: '#80cbc4'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 0
-                to: 2
-                color: rgba(234,89,89,0.55)
-              - from: 2
-                to: 3
-                color: rgba(255,192,87,0.45)
-              - from: 3
-                to: 8
-                color: rgba(83,189,117,0.35)
-          - type: custom:canvas-gauge-card
-            entity: sensor.helm_starboard_fuel_lph
-            card_height: 210
-            gauge:
-              type: radial-gauge
-              width: 200
-              height: 200
-              title: Fuel
-              units: L/h
-              minValue: 0
-              maxValue: 24
-              majorTicks:
-              - '0'
-              - '6'
-              - '12'
-              - '18'
-              - '24'
-              colorPlate: '#1a1a2e'
-              colorMajorTicks: '#ccc'
-              colorMinorTicks: '#666'
-              colorTitle: '#80cbc4'
-              colorUnits: '#80cbc4'
-              colorNumbers: '#ddd'
-              colorNeedle: '#ff6b35'
-              colorNeedleEnd: '#ff6b35'
-              colorValueBoxBackground: '#0d0d1a'
-              colorValueText: '#fff'
-              borderShadowWidth: 0
-              borders: false
-              needleType: arrow
-              needleWidth: 2
-              animationDuration: 500
-              animationRule: linear
-              highlights:
-              - from: 0
-                to: 14
-                color: rgba(83,189,117,0.35)
-              - from: 14
-                to: 18
-                color: rgba(255,192,87,0.45)
-              - from: 18
-                to: 24
-                color: rgba(234,89,89,0.55)
+      - type: custom:canvas-gauge-card
+        entity: sensor.helm_port_rpm
+        card_height: 210
+        gauge:
+          type: radial-gauge
+          width: 200
+          height: 200
+          title: PORT RPM
+          units: RPM
+          minValue: 0
+          maxValue: 4400
+          majorTicks:
+          - '0'
+          - '500'
+          - '1000'
+          - '1500'
+          - '2000'
+          - '2500'
+          - '3000'
+          - '3500'
+          - '4000'
+          - '4400'
+          highlights:
+          - from: 0
+            to: 2800
+            color: rgba(83,189,117,0.4)
+          - from: 2800
+            to: 3600
+            color: rgba(255,165,0,0.5)
+          - from: 3600
+            to: 4400
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#1a237e'
+          colorUnits: '#1a237e'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 3
+          animationDuration: 500
+          animationRule: linear
+      - type: custom:canvas-gauge-card
+        entity: sensor.helm_starboard_rpm
+        card_height: 210
+        gauge:
+          type: radial-gauge
+          width: 200
+          height: 200
+          title: STBD RPM
+          units: RPM
+          minValue: 0
+          maxValue: 4400
+          majorTicks:
+          - '0'
+          - '500'
+          - '1000'
+          - '1500'
+          - '2000'
+          - '2500'
+          - '3000'
+          - '3500'
+          - '4000'
+          - '4400'
+          highlights:
+          - from: 0
+            to: 2800
+            color: rgba(83,189,117,0.4)
+          - from: 2800
+            to: 3600
+            color: rgba(255,165,0,0.5)
+          - from: 3600
+            to: 4400
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#004d40'
+          colorUnits: '#004d40'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 3
+          animationDuration: 500
+          animationRule: linear
     - type: horizontal-stack
       cards:
       - type: custom:canvas-gauge-card
-        entity: sensor.sk_depth
-        card_height: 230
+        entity: sensor.sk_port_water_temp
+        card_height: 180
         gauge:
           type: radial-gauge
-          width: 220
-          height: 220
-          title: Depth
-          units: m
+          width: 170
+          height: 170
+          title: P Water C
+          units: C
           minValue: 0
-          maxValue: 20
+          maxValue: 120
           majorTicks:
           - '0'
-          - '5'
-          - '10'
-          - '15'
-          - '20'
-          colorPlate: '#1a1a2e'
-          colorMajorTicks: '#ccc'
-          colorMinorTicks: '#666'
-          colorTitle: '#fff176'
-          colorUnits: '#fff176'
-          colorNumbers: '#ddd'
-          colorNeedle: '#ff6b35'
-          colorNeedleEnd: '#ff6b35'
-          colorValueBoxBackground: '#0d0d1a'
-          colorValueText: '#fff'
-          borderShadowWidth: 0
-          borders: false
-          needleType: arrow
-          needleWidth: 2
-          animationDuration: 500
-          animationRule: linear
-          highlights:
-          - from: 0
-            to: 3
-            color: rgba(234,89,89,0.55)
-          - from: 3
-            to: 6
-            color: rgba(255,192,87,0.45)
-          - from: 6
-            to: 20
-            color: rgba(83,189,117,0.35)
-      - type: custom:canvas-gauge-card
-        entity: sensor.sk_wind_speed
-        card_height: 230
-        gauge:
-          type: radial-gauge
-          width: 220
-          height: 220
-          title: AWS
-          units: kn
-          minValue: 0
-          maxValue: 40
-          majorTicks:
-          - '0'
-          - '10'
-          - '20'
-          - '30'
           - '40'
-          colorPlate: '#1a1a2e'
-          colorMajorTicks: '#ccc'
-          colorMinorTicks: '#666'
-          colorTitle: '#fff176'
-          colorUnits: '#fff176'
-          colorNumbers: '#ddd'
-          colorNeedle: '#ff6b35'
-          colorNeedleEnd: '#ff6b35'
-          colorValueBoxBackground: '#0d0d1a'
-          colorValueText: '#fff'
+          - '70'
+          - '90'
+          - '110'
+          - '120'
+          highlights:
+          - from: 40
+            to: 70
+            color: rgba(255,165,0,0.4)
+          - from: 70
+            to: 90
+            color: rgba(83,189,117,0.4)
+          - from: 90
+            to: 100
+            color: rgba(255,165,0,0.5)
+          - from: 100
+            to: 120
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#1a237e'
+          colorUnits: '#1a237e'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
           borderShadowWidth: 0
           borders: false
           needleType: arrow
           needleWidth: 2
           animationDuration: 500
           animationRule: linear
+      - type: custom:canvas-gauge-card
+        entity: sensor.sk_port_oil_pressure
+        card_height: 180
+        gauge:
+          type: radial-gauge
+          width: 170
+          height: 170
+          title: P Oil bar
+          units: bar
+          minValue: 0
+          maxValue: 10
+          majorTicks:
+          - '0'
+          - '2'
+          - '4'
+          - '5'
+          - '6'
+          - '8'
+          - '10'
           highlights:
           - from: 0
-            to: 15
-            color: rgba(83,189,117,0.35)
-          - from: 15
-            to: 25
-            color: rgba(255,192,87,0.45)
-          - from: 25
-            to: 40
-            color: rgba(234,89,89,0.55)
-      - type: custom:canvas-gauge-card
-        entity: sensor.sk_wind_angle
-        card_height: 230
-        gauge:
-          type: radial-gauge
-          width: 220
-          height: 220
-          title: AWA
-          units: deg
-          minValue: 0
-          maxValue: 360
-          majorTicks:
-          - '0'
-          - '90'
-          - '180'
-          - '270'
-          - '360'
-          colorPlate: '#1a1a2e'
-          colorMajorTicks: '#ccc'
-          colorMinorTicks: '#666'
-          colorTitle: '#fff176'
-          colorUnits: '#fff176'
-          colorNumbers: '#ddd'
-          colorNeedle: '#ff6b35'
-          colorNeedleEnd: '#ff6b35'
-          colorValueBoxBackground: '#0d0d1a'
-          colorValueText: '#fff'
+            to: 2
+            color: rgba(220,50,50,0.55)
+          - from: 2
+            to: 3
+            color: rgba(255,165,0,0.5)
+          - from: 3
+            to: 8
+            color: rgba(83,189,117,0.4)
+          - from: 8
+            to: 10
+            color: rgba(255,165,0,0.5)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#1a237e'
+          colorUnits: '#1a237e'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
           borderShadowWidth: 0
           borders: false
           needleType: arrow
@@ -507,32 +220,139 @@ views:
           animationDuration: 500
           animationRule: linear
       - type: custom:canvas-gauge-card
-        entity: sensor.helm_sog
-        card_height: 230
+        entity: sensor.sk_starboard_water_temp
+        card_height: 180
         gauge:
           type: radial-gauge
-          width: 220
-          height: 220
-          title: SOG
-          units: kn
+          width: 170
+          height: 170
+          title: S Water C
+          units: C
           minValue: 0
-          maxValue: 14
+          maxValue: 120
           majorTicks:
           - '0'
+          - '40'
+          - '70'
+          - '90'
+          - '110'
+          - '120'
+          highlights:
+          - from: 40
+            to: 70
+            color: rgba(255,165,0,0.4)
+          - from: 70
+            to: 90
+            color: rgba(83,189,117,0.4)
+          - from: 90
+            to: 100
+            color: rgba(255,165,0,0.5)
+          - from: 100
+            to: 120
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#004d40'
+          colorUnits: '#004d40'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 2
+          animationDuration: 500
+          animationRule: linear
+      - type: custom:canvas-gauge-card
+        entity: sensor.sk_starboard_oil_pressure
+        card_height: 180
+        gauge:
+          type: radial-gauge
+          width: 170
+          height: 170
+          title: S Oil bar
+          units: bar
+          minValue: 0
+          maxValue: 10
+          majorTicks:
+          - '0'
+          - '2'
           - '4'
+          - '5'
+          - '6'
           - '8'
+          - '10'
+          highlights:
+          - from: 0
+            to: 2
+            color: rgba(220,50,50,0.55)
+          - from: 2
+            to: 3
+            color: rgba(255,165,0,0.5)
+          - from: 3
+            to: 8
+            color: rgba(83,189,117,0.4)
+          - from: 8
+            to: 10
+            color: rgba(255,165,0,0.5)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#004d40'
+          colorUnits: '#004d40'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 2
+          animationDuration: 500
+          animationRule: linear
+    - type: horizontal-stack
+      cards:
+      - type: custom:canvas-gauge-card
+        entity: sensor.helm_port_fuel_lph
+        card_height: 180
+        gauge:
+          type: radial-gauge
+          width: 170
+          height: 170
+          title: P Fuel L/h
+          units: L/h
+          minValue: 0
+          maxValue: 24
+          majorTicks:
+          - '0'
+          - '6'
           - '12'
-          - '14'
-          colorPlate: '#1a1a2e'
-          colorMajorTicks: '#ccc'
-          colorMinorTicks: '#666'
-          colorTitle: '#fff176'
-          colorUnits: '#fff176'
-          colorNumbers: '#ddd'
-          colorNeedle: '#ff6b35'
-          colorNeedleEnd: '#ff6b35'
-          colorValueBoxBackground: '#0d0d1a'
-          colorValueText: '#fff'
+          - '18'
+          - '24'
+          highlights:
+          - from: 0
+            to: 14
+            color: rgba(83,189,117,0.4)
+          - from: 14
+            to: 18
+            color: rgba(255,165,0,0.5)
+          - from: 18
+            to: 24
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#1a237e'
+          colorUnits: '#1a237e'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
           borderShadowWidth: 0
           borders: false
           needleType: arrow
@@ -540,32 +360,128 @@ views:
           animationDuration: 500
           animationRule: linear
       - type: custom:canvas-gauge-card
-        entity: sensor.helm_heading
-        card_height: 230
+        entity: sensor.sk_port_tank_l
+        card_height: 180
         gauge:
           type: radial-gauge
-          width: 220
-          height: 220
-          title: HDG
-          units: deg
+          width: 170
+          height: 170
+          title: P Tank L
+          units: L
           minValue: 0
-          maxValue: 360
+          maxValue: 400
           majorTicks:
           - '0'
-          - '90'
-          - '180'
-          - '270'
-          - '360'
-          colorPlate: '#1a1a2e'
-          colorMajorTicks: '#ccc'
-          colorMinorTicks: '#666'
-          colorTitle: '#fff176'
-          colorUnits: '#fff176'
-          colorNumbers: '#ddd'
-          colorNeedle: '#ff6b35'
-          colorNeedleEnd: '#ff6b35'
-          colorValueBoxBackground: '#0d0d1a'
-          colorValueText: '#fff'
+          - '100'
+          - '200'
+          - '300'
+          - '400'
+          highlights:
+          - from: 0
+            to: 50
+            color: rgba(220,50,50,0.55)
+          - from: 50
+            to: 100
+            color: rgba(255,165,0,0.5)
+          - from: 100
+            to: 400
+            color: rgba(83,189,117,0.4)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#1a237e'
+          colorUnits: '#1a237e'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 2
+          animationDuration: 500
+          animationRule: linear
+      - type: custom:canvas-gauge-card
+        entity: sensor.helm_starboard_fuel_lph
+        card_height: 180
+        gauge:
+          type: radial-gauge
+          width: 170
+          height: 170
+          title: S Fuel L/h
+          units: L/h
+          minValue: 0
+          maxValue: 24
+          majorTicks:
+          - '0'
+          - '6'
+          - '12'
+          - '18'
+          - '24'
+          highlights:
+          - from: 0
+            to: 14
+            color: rgba(83,189,117,0.4)
+          - from: 14
+            to: 18
+            color: rgba(255,165,0,0.5)
+          - from: 18
+            to: 24
+            color: rgba(220,50,50,0.55)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#004d40'
+          colorUnits: '#004d40'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
+          borderShadowWidth: 0
+          borders: false
+          needleType: arrow
+          needleWidth: 2
+          animationDuration: 500
+          animationRule: linear
+      - type: custom:canvas-gauge-card
+        entity: sensor.sk_starboard_tank_l
+        card_height: 180
+        gauge:
+          type: radial-gauge
+          width: 170
+          height: 170
+          title: S Tank L
+          units: L
+          minValue: 0
+          maxValue: 400
+          majorTicks:
+          - '0'
+          - '100'
+          - '200'
+          - '300'
+          - '400'
+          highlights:
+          - from: 0
+            to: 50
+            color: rgba(220,50,50,0.55)
+          - from: 50
+            to: 100
+            color: rgba(255,165,0,0.5)
+          - from: 100
+            to: 400
+            color: rgba(83,189,117,0.4)
+          colorPlate: '#ffffff'
+          colorMajorTicks: '#333'
+          colorMinorTicks: '#888'
+          colorTitle: '#004d40'
+          colorUnits: '#004d40'
+          colorNumbers: '#222'
+          colorNeedle: '#c62828'
+          colorNeedleEnd: '#c62828'
+          colorValueBoxBackground: '#e0e0e0'
+          colorValueText: '#111'
           borderShadowWidth: 0
           borders: false
           needleType: arrow

@@ -1,13 +1,13 @@
 # SignalK to Home Assistant — Helm Display
 
-Replicates OpenCPN DashboardSK-style analogue gauges in Home Assistant, fed live from SignalK via MQTT.
+Replicates analogue engine and tank gauges in Home Assistant, fed live from SignalK via MQTT. Optimised for a Samsung Galaxy Tab Active 3 (SM-T575) running Fully Kiosk Browser in landscape.
 
 ## System Overview
 
 ```
-Instruments / GPS / AIS
+Instruments / GPS / AIS / ECU (Kvaser)
         │
-   rpi4b (192.168.1.30)          ← PRIMARY SignalK server
+   rpi5sk (192.168.1.30)          ← PRIMARY SignalK server
    signalk-mqtt-gw plugin
         │
         ▼
@@ -20,45 +20,70 @@ Instruments / GPS / AIS
 
 ### Failover
 
-rpi5sk (192.168.9.244) is a backup SignalK server that mirrors rpi4b and publishes identical MQTT topics to the same broker. If you switch to the backup, the dashboard continues working without any changes.
+rpi5sk (192.168.9.244) is a backup SignalK server that mirrors the primary and publishes identical MQTT topics to the same broker. Switching to backup is transparent — the dashboard continues working without any changes.
+
+---
+
+## Dashboard Layout
+
+3-row layout, all gauges filling the full screen width:
+
+| Row | Left → Right |
+|-----|-------------|
+| 1 | PORT RPM \| STBD RPM |
+| 2 | P Water C \| P Oil bar \| S Water C \| S Oil bar |
+| 3 | P Fuel L/h \| P Tank L \| S Fuel L/h \| S Tank L |
+
+**Colour coding:** PORT gauge titles navy blue (`#1a237e`), STBD teal (`#004d40`), needles red (`#c62828`), white plates.
+
+Sized for Samsung Galaxy Tab Active 3 (960×600 CSS viewport in landscape): RPM 200px, small gauges 170px, total height ~570px.
 
 ---
 
 ## Gauge Reference
 
-| Gauge | HA Entity | Source SK Path | Unit | Conversion |
-|-------|-----------|----------------|------|------------|
-| Port RPM | `sensor.helm_port_rpm` | `propulsion.port.revolutions` | Hz→RPM | ×60 |
-| Port Water Temp | `sensor.sk_port_water_temp` | `sensors.port.watertemp.celsius` | °C | — |
-| Port Oil Pressure | `sensor.sk_port_oil_pressure` | `sensors.port.oilpressure.bar` | bar | — |
-| Port Fuel Flow | `sensor.helm_port_fuel_lph` | `propulsion.port.fuel.rate` | m³/s→L/h | ×3,600,000 |
-| Stbd RPM | `sensor.helm_starboard_rpm` | `propulsion.starboard.revolutions` | Hz→RPM | ×60 |
-| Stbd Water Temp | `sensor.sk_starboard_water_temp` | `sensors.starboard.watertemp.celsius` | °C | — |
-| Stbd Oil Pressure | `sensor.sk_starboard_oil_pressure` | `sensors.starboard.oilpressure.bar` | bar | — |
-| Stbd Fuel Flow | `sensor.helm_starboard_fuel_lph` | `propulsion.starboard.fuel.rate` | m³/s→L/h | ×3,600,000 |
-| Depth | `sensor.sk_depth` | `environment.depth.belowTransducer` | m | — |
-| Apparent Wind Speed | `sensor.sk_wind_speed` | `environment.wind.speedApparentKnots` | kn | — |
-| Apparent Wind Angle | `sensor.sk_wind_angle` | `environment.wind.angleApparentDegrees` | ° | — |
-| SOG | `sensor.helm_sog` | `navigation.speedOverGround` | m/s→kn | ×1.94384 |
-| Heading | `sensor.helm_heading` | `navigation.headingMagnetic` | rad→° | ×57.2958 |
-| Fuel Economy | `sensor.sk_fuel_per_nm` | `sensors.engines.total.fuel.litersPerNm` | L/NM | — |
+| Gauge | HA Entity | Source SK Path | Raw Unit | Display | Conversion |
+|-------|-----------|----------------|----------|---------|------------|
+| Port RPM | `sensor.helm_port_rpm` | `propulsion.port.revolutions` | Hz | RPM | ×60 |
+| Port Water Temp | `sensor.sk_port_water_temp` | `sensors.port.watertemp.celsius` | °C | °C | — |
+| Port Oil Pressure | `sensor.sk_port_oil_pressure` | `sensors.port.oilpressure.bar` | bar | bar | — |
+| Port Fuel Flow | `sensor.helm_port_fuel_lph` | `propulsion.port.fuel.rate` | m³/s | L/h | ×3,600,000 |
+| Port Tank | `sensor.sk_port_tank_l` | `tanks.fuel.port.remaining` | L | L | — |
+| Stbd RPM | `sensor.helm_starboard_rpm` | `propulsion.starboard.revolutions` | Hz | RPM | ×60 |
+| Stbd Water Temp | `sensor.sk_starboard_water_temp` | `sensors.starboard.watertemp.celsius` | °C | °C | — |
+| Stbd Oil Pressure | `sensor.sk_starboard_oil_pressure` | `sensors.starboard.oilpressure.bar` | bar | bar | — |
+| Stbd Fuel Flow | `sensor.helm_starboard_fuel_lph` | `propulsion.starboard.fuel.rate` | m³/s | L/h | ×3,600,000 |
+| Stbd Tank | `sensor.sk_starboard_tank_l` | `tanks.fuel.starboard.remaining` | L | L | — |
+
+### Gauge Zones
+
+| Gauge | Red | Amber | Green | Amber | Red |
+|-------|-----|-------|-------|-------|-----|
+| RPM | — | 2800–3600 | 0–2800 | — | 3600–4400 |
+| Water C | — | 40–70 (warm-up) | 70–90 | 90–100 | 100–120 |
+| Oil bar | 0–2 | 2–3 | 3–8 | 8–10 | — |
+| Fuel L/h | — | 14–18 | 0–14 | — | 18–24 |
+| Tank L | 0–50 | 50–100 | 100–400 | — | — |
 
 ---
 
 ## Prerequisites
 
 - **Home Assistant** with:
-  - Mosquitto broker addon installed and running
+  - Mosquitto broker addon
   - HACS installed
   - **canvas-gauge-card** installed via HACS → Frontend
-- **SignalK** (rpi4b) with **signalk-mqtt-gw** plugin enabled and configured (see below)
-- Python 3 with `websockets` and `pyyaml` on your Mac (for pushing the dashboard)
+  - **kiosk-mode** installed via HACS → Frontend
+  - **card-mod** installed via HACS → Frontend
+- **SignalK** (rpi5sk) with **signalk-mqtt-gw** plugin configured (see Step 1)
+- **fuel-tracker** SK plugin running (publishes `tanks.fuel.port.remaining` / `tanks.fuel.starboard.remaining`)
+- Python 3 with `websockets`, `pyyaml`, `paho-mqtt` on your Mac
 
 ---
 
-## Step 1 — Configure signalk-mqtt-gw on rpi4b
+## Step 1 — Configure signalk-mqtt-gw
 
-SSH into rpi4b and ensure `/home/pi/.signalk/plugin-config-data/signalk-mqtt-gw.json` contains:
+SSH into the SK server and ensure `/home/pi/.signalk/plugin-config-data/signalk-mqtt-gw.json` contains:
 
 ```json
 {
@@ -73,7 +98,7 @@ SSH into rpi4b and ensure `/home/pi/.signalk/plugin-config-data/signalk-mqtt-gw.
     "selectedOption": "1) vessels.self",
     "paths": [
       {
-        "path": "[\"environment.wind.*\", \"environment.depth.*\", \"propulsion.port.revolutions\", \"propulsion.port.fuel.rate\", \"propulsion.port.temperature\", \"propulsion.starboard.revolutions\", \"propulsion.starboard.fuel.rate\", \"propulsion.starboard.temperature\", \"sensors.port.oilpressure.*\", \"sensors.port.watertemp.*\", \"sensors.starboard.oilpressure.*\", \"sensors.starboard.watertemp.*\", \"navigation.headingMagnetic\", \"navigation.speedOverGround\", \"sensors.engines.total.fuel.litersPerNm\"]",
+        "path": "[\"propulsion.port.revolutions\", \"propulsion.port.fuel.rate\", \"propulsion.starboard.revolutions\", \"propulsion.starboard.fuel.rate\", \"sensors.port.oilpressure.*\", \"sensors.port.watertemp.*\", \"sensors.starboard.oilpressure.*\", \"sensors.starboard.watertemp.*\", \"tanks.fuel.port.remaining\", \"tanks.fuel.starboard.remaining\", \"navigation.headingMagnetic\", \"navigation.speedOverGround\", \"environment.wind.*\", \"environment.depth.*\", \"sensors.engines.total.fuel.litersPerNm\"]",
         "interval": 1
       }
     ]
@@ -87,34 +112,28 @@ Then restart SignalK:
 sudo systemctl restart signalk
 ```
 
-> **For rpi5sk (backup):** copy the identical file across and restart SK there too, so failover keeps publishing the same topics.
-
 ---
 
-## Step 2 — Create HA sensors via MQTT auto-discovery
+## Step 2 — Create HA MQTT sensors
 
-The sensors are created by publishing auto-discovery messages to the MQTT broker. Run this Python script from your Mac:
+Publish auto-discovery messages to the MQTT broker. Run from your Mac:
 
 ```bash
-pip install paho-mqtt   # if not already installed
+pip install paho-mqtt pyyaml websockets
 python3 create_sensors.py
 ```
 
-Or publish manually with mosquitto_pub. The key sensors and their discovery topics:
-
-### Raw MQTT sensors (no conversion needed)
+### Raw sensors (no conversion)
 | unique_id | state_topic | unit |
 |-----------|-------------|------|
 | `sk_port_water_temp` | `vessels/self/sensors/port/watertemp/celsius` | °C |
 | `sk_port_oil_pressure` | `vessels/self/sensors/port/oilpressure/bar` | bar |
 | `sk_starboard_water_temp` | `vessels/self/sensors/starboard/watertemp/celsius` | °C |
 | `sk_starboard_oil_pressure` | `vessels/self/sensors/starboard/oilpressure/bar` | bar |
-| `sk_depth` | `vessels/self/environment/depth/belowTransducer` | m |
-| `sk_wind_speed` | `vessels/self/environment/wind/speedApparentKnots` | kn |
-| `sk_wind_angle` | `vessels/self/environment/wind/angleApparentDegrees` | ° |
-| `sk_fuel_per_nm` | `vessels/self/sensors/engines/total/fuel/litersPerNm` | L/NM |
+| `sk_port_tank_l` | `vessels/self/tanks/fuel/port/remaining` | L |
+| `sk_starboard_tank_l` | `vessels/self/tanks/fuel/starboard/remaining` | L |
 
-### Converted sensors (value_template does the unit conversion)
+### Converted sensors
 | unique_id | state_topic | value_template | unit |
 |-----------|-------------|----------------|------|
 | `helm_port_rpm` | `vessels/self/propulsion/port/revolutions` | `{{ (value\|float(0) * 60)\|round(0)\|int }}` | RPM |
@@ -124,27 +143,29 @@ Or publish manually with mosquitto_pub. The key sensors and their discovery topi
 | `helm_sog` | `vessels/self/navigation/speedOverGround` | `{{ (value\|float(0) * 1.94384)\|round(1) }}` | kn |
 | `helm_heading` | `vessels/self/navigation/headingMagnetic` | `{{ (value\|float(0) * 57.2958)\|round(0)\|int }}` | ° |
 
-Publish each as a retained message to `homeassistant/sensor/<unique_id>/config` with the JSON payload. Example for Port RPM:
-
-```bash
-mosquitto_pub -h 192.168.1.40 -p 1883 -u pi -P raspberry -r \
-  -t "homeassistant/sensor/helm_port_rpm/config" \
-  -m '{"unique_id":"helm_port_rpm","name":"Helm Port RPM","state_topic":"vessels/self/propulsion/port/revolutions","unit_of_measurement":"RPM","state_class":"measurement","value_template":"{{ (value | float(0) * 60) | round(0) | int }}","icon":"mdi:engine"}'
-```
-
 ---
 
-## Step 3 — Install canvas-gauge-card
+## Step 3 — Install HACS cards
 
 1. HA → **HACS** → **Frontend** → **＋ Explore & Download**
-2. Search **canvas-gauge-card** → Download
-3. Accept the prompt to add a Lovelace resource
+2. Install **canvas-gauge-card**
+3. Install **kiosk-mode**
+4. Install **card-mod**
 
 ---
 
-## Step 4 — Push the dashboard
+## Step 4 — Create the Helm Display dashboard
 
-Run from your Mac (requires Python `websockets` and `pyyaml`):
+HA → **Settings → Dashboards → ＋ Add Dashboard**
+
+| Field | Value |
+|-------|-------|
+| Title | `Helm Display` |
+| URL path | `helm-display` |
+
+---
+
+## Step 5 — Push the dashboard config
 
 ```python
 import asyncio, json, yaml, websockets
@@ -164,59 +185,43 @@ async def push():
 asyncio.run(push())
 ```
 
-The dashboard will appear at **http://192.168.1.40:8123/helm-display**.
+---
 
-> If the `helm-display` dashboard doesn't exist yet, create it first:  
-> HA → Settings → Dashboards → **＋ Add Dashboard** → Title: `Helm Display`, URL path: `helm-display`
+## Step 6 — Set up Fully Kiosk Browser on the tablet
+
+1. Install **Fully Kiosk Browser** from the Play Store
+2. Open it → three-dot menu → **Settings**
+3. **Start URL**: `http://192.168.1.40:8123/helm-display/engines?kiosk`
+   - The `?kiosk` parameter activates kiosk-mode, hiding the HA header and sidebar
+4. **Web Content** → enable **Kiosk Mode** (hides browser chrome)
+5. **Device Management** → enable **Keep Screen On**
 
 ---
 
-## Step 5 — Connect SK on HA to rpi4b (optional)
+## Customising
 
-This makes the SK instance running on the HA server (port 3000) a live replica of rpi4b — useful for other SK consumers on the network but not required for the MQTT gauges.
-
-Open **http://192.168.1.40:3000/admin** → **Server → Data Connections → ＋ Add**
-
-| Field | Value |
-|-------|-------|
-| Data type | Signal K over WebSocket |
-| Host | 192.168.1.30 |
-| Port | 3000 |
-| Path | /signalk/v1/stream |
-| selfHandling | manualSelf |
-| remoteSelf | `vessels.urn:mrn:imo:mmsi:235032206` |
-
-Save → Restart SK on HA.
-
----
-
-## Customising the dashboard
-
-Edit `helm_dashboard.yaml` then push using the script above, or edit directly in HA:
-
+Edit `helm_dashboard.yaml` then push using the script above, or:
 **HA → Helm Display → Edit (pencil) → Raw configuration editor**
-
-### Key values to adjust
 
 | Property | What it does |
 |----------|-------------|
-| `gauge.width` / `gauge.height` | Rendered diameter of the canvas in px |
-| `card_height` | Height of the HA card slot in px |
-| `highlights` | Colour zones — `from`/`to` are gauge values, `color` is rgba |
-| `colorNeedle` | Needle colour |
-| `colorPlate` | Gauge background colour |
+| `gauge.width` / `gauge.height` | Canvas diameter in px — set both the same |
+| `card_height` | HA card slot height in px — set ~10px above `height` |
+| `highlights` | Colour zones — `from`/`to` are gauge values |
 | `minValue` / `maxValue` | Scale range |
-| `majorTicks` | Tick label positions |
+| `majorTicks` | Tick label positions (must be strings) |
+| `colorTitle` / `colorUnits` | Label colours — navy `#1a237e` = PORT, teal `#004d40` = STBD |
+
+**Sizing note:** Galaxy Tab Active 3 (SM-T575) has a 960×600 CSS viewport in landscape. Total `card_height` of all rows must stay under ~580px to avoid clipping.
 
 ---
 
-## Network reference
+## Network Reference
 
 | Device | IP | Role |
 |--------|----|------|
-| rpi4b | 192.168.1.30 | PRIMARY SignalK — all instruments connected |
-| rpi5sk | 192.168.9.244 | BACKUP SignalK — mirrors rpi4b, same MQTT output |
-| Home Assistant | 192.168.1.40 | HA + MQTT broker + SK instance |
+| rpi5sk | 192.168.1.30 | PRIMARY SignalK |
+| Home Assistant | 192.168.1.40 | HA + MQTT broker |
 
-MQTT broker credentials: `pi` / `raspberry`  
-SSH credentials (rpi4b & rpi5sk): `pi` / `raspberry`
+MQTT credentials: `pi` / `raspberry`
+SSH credentials: `pi` / `raspberry`
