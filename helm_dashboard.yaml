@@ -133,13 +133,16 @@ views:
           height: 170
           title: P Water C
           units: C
-          minValue: 0
+          minValue: 40
           maxValue: 120
           majorTicks:
-          - '0'
           - '40'
+          - '50'
+          - '60'
           - '70'
+          - '80'
           - '90'
+          - '100'
           - '110'
           - '120'
           highlights:
@@ -228,13 +231,16 @@ views:
           height: 170
           title: S Water C
           units: C
-          minValue: 0
+          minValue: 40
           maxValue: 120
           majorTicks:
-          - '0'
           - '40'
+          - '50'
+          - '60'
           - '70'
+          - '80'
           - '90'
+          - '100'
           - '110'
           - '120'
           highlights:
