@@ -332,22 +332,24 @@ views:
           title: P Fuel L/h
           units: L/h
           minValue: 0
-          maxValue: 24
+          maxValue: 35
           majorTicks:
           - '0'
           - '6'
           - '12'
           - '18'
           - '24'
+          - '30'
+          - '35'
           highlights:
           - from: 0
-            to: 14
+            to: 12
             color: rgba(83,189,117,0.4)
-          - from: 14
-            to: 18
+          - from: 12
+            to: 20
             color: rgba(255,165,0,0.5)
-          - from: 18
-            to: 24
+          - from: 20
+            to: 35
             color: rgba(220,50,50,0.55)
           colorPlate: '#ffffff'
           colorMajorTicks: '#333'
@@ -418,22 +420,24 @@ views:
           title: S Fuel L/h
           units: L/h
           minValue: 0
-          maxValue: 24
+          maxValue: 35
           majorTicks:
           - '0'
           - '6'
           - '12'
           - '18'
           - '24'
+          - '30'
+          - '35'
           highlights:
           - from: 0
-            to: 14
+            to: 12
             color: rgba(83,189,117,0.4)
-          - from: 14
-            to: 18
+          - from: 12
+            to: 20
             color: rgba(255,165,0,0.5)
-          - from: 18
-            to: 24
+          - from: 20
+            to: 35
             color: rgba(220,50,50,0.55)
           colorPlate: '#ffffff'
           colorMajorTicks: '#333'
